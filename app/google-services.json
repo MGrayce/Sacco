@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "883692827891",
+    "firebase_url": "https://saccodemo.firebaseio.com",
+    "project_id": "saccodemo",
+    "storage_bucket": "saccodemo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:883692827891:android:8b7bb9d5b03e8c51943386",
+        "android_client_info": {
+          "package_name": "com.grayapps.saccodemo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "883692827891-gvpr7bgcj7oad8vblkij8olojpkdvieh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.grayapps.saccodemo",
+            "certificate_hash": "73ebde14409016da7bd8032953fe91a59cbfa25a"
+          }
+        },
+        {
+          "client_id": "883692827891-a2lojlb6ud0rfkl7v19pfivap4c7ruo5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1qv1lw1bb2TOipS-sJFQYwsDkBFN_YXg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "883692827891-a2lojlb6ud0rfkl7v19pfivap4c7ruo5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
