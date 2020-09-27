@@ -26,7 +26,7 @@
     <string name="invalidCode">Invalid code.</string>
     <string name="phoneSuccess">Phone has been registered</string>
     <string name="saccoLogin">Sacco Login</string>
-    <string name="notregistered">is not registered under any Sacco Group. Please create a new account</string>
+    <string name="notregistered">is not registered under any Sacco Group. Please create a new group or request the Admin to register you</string>
     <string name="pleasewait">Please wait</string>
     <string name="missing">Missing some details</string>
     <string name="saccoSignup">Sacco Signup</string>
@@ -47,7 +47,7 @@
     <string name="month">12 Months</string>
     <string name="ten">10</string>
     <string name="three4">340,000</string>
-    <string name="transaction">Transaction history</string>
+    <string name="transaction">Transaction history (Offline)</string>
     <string name="cotribution">Contributions</string>
     <string name="totalthisweek">Total this week</string>
     <string name="cumulative">Cumulative total</string>
@@ -71,4 +71,9 @@
     <string name="amountDeposited">Amount deposited</string>
     <string name="date">Date</string>
     <string name="balac">Balance</string>
+    <string name="contributionsoffline">Contributions (Offline)</string>
+    <string name="contributionsonline">Contributions (Online)</string>
+    <string name="logout">LOG OUT</string>
+    <string name="confirmLogout">Confirm action</string>
+    <string name="saccoLogout">Sacco Logout</string>
 </resources>

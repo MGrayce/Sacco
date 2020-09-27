@@ -27,6 +27,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.grayapps.saccodemo.Demo.Utils.ShowDialog;
 import com.grayapps.saccodemo.R;
 
@@ -106,42 +107,56 @@ public class Login extends AppCompatActivity {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Sacco_Accounts");
         databaseReference.keepSynced(true);
         final Query query=databaseReference.orderByChild("userPhone").equalTo(mobile);
-
-        query.addChildEventListener(new ChildEventListener() {
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                int getCount = (int) dataSnapshot.getChildrenCount();
+                if(getCount >0){
+                    query.addChildEventListener(new ChildEventListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.M)
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                if(dataSnapshot.exists()) {
-                    loadDefaults();
-                    final String getUserRole = dataSnapshot.child("userRole").getValue(String.class);
-                    final String getSacco = dataSnapshot.child("userSacco").getValue(String.class);
-                    final String getUserName = dataSnapshot.child("userName").getValue(String.class);
-                    final String getUserPhone = dataSnapshot.child("userPhone").getValue(String.class);
-                    final String getSaccoImage = dataSnapshot.child("saccoImage").getValue(String.class);
-                    Toast.makeText(Login.this, "" + getUserPhone, Toast.LENGTH_LONG).show();
-                    showDialog(getSacco, getSaccoImage, getUserRole, getUserPhone, getUserName);
+                            if(dataSnapshot.exists()) {
+                                loadDefaults();
+                                final String getUserRole = dataSnapshot.child("userRole").getValue(String.class);
+                                final String getSacco = dataSnapshot.child("userSacco").getValue(String.class);
+                                final String getUserName = dataSnapshot.child("userName").getValue(String.class);
+                                final String getUserPhone = dataSnapshot.child("userPhone").getValue(String.class);
+                                final String getSaccoImage = dataSnapshot.child("saccoImage").getValue(String.class);
+                                Toast.makeText(Login.this, "" + getUserPhone, Toast.LENGTH_LONG).show();
+                                showDialog(getSacco, getSaccoImage, getUserRole, getUserPhone, getUserName);
+                            }
+
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                 }
                 else {
                     final String getUserPhone = dataSnapshot.child("userPhone").getValue(String.class);
                     loadDefaults();
-                    showErrorDialog(getUserPhone);
+                    showErrorDialog(mobile);
                 }
-
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
             }
 
@@ -150,6 +165,8 @@ public class Login extends AppCompatActivity {
 
             }
         });
+
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -182,7 +199,7 @@ public class Login extends AppCompatActivity {
                 recreate();
             }
         });
-        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Continue",
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Continue",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         SharedPreferences.Editor editor = sharedPreferences.edit();

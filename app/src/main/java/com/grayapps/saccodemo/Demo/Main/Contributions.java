@@ -1,5 +1,7 @@
 package com.grayapps.saccodemo.Demo.Main;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,19 +18,27 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.grayapps.saccodemo.Demo.Adapters.ContibutionsAdapter;
+import com.grayapps.saccodemo.Demo.Adapters.ContributionsAdapterOnline;
 import com.grayapps.saccodemo.Demo.Utils.DatabaseClient;
 import com.grayapps.saccodemo.Demo.Utils.Entities;
+import com.grayapps.saccodemo.Demo.Utils.EntitiesOnlineObj;
 import com.grayapps.saccodemo.R;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -47,6 +57,11 @@ public class Contributions extends AppCompatActivity {
     private String getUserName, getSaccoName, getImageUrl, getUserRole, getUserPhone;
     private FloatingActionButton addMember, depositNow;
     private RecyclerView recyclerView;
+    private ArrayList<Integer> amount = new ArrayList<Integer>();
+    private TextView saccoSavings, cumulative, ctStatus;
+    private LinearLayout ctLayout;
+    private List<EntitiesOnlineObj> entitiesOnlineObjList = new ArrayList<>();
+    private ContributionsAdapterOnline adapterOnline;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +85,15 @@ public class Contributions extends AppCompatActivity {
         getUserPhone = sharedPreferences.getString("userPhone", "");
 
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Sacco_Accounts");
-        databaseReference2 = FirebaseDatabase.getInstance().getReference().child("Sacco_Deposits");
+        databaseReference2 = FirebaseDatabase.getInstance().getReference().child(getSaccoName+"_Transactions");
+
+        ctStatus = findViewById(R.id.ctStatus);
+        ctLayout = findViewById(R.id.ctLayout);
+
+
+
+        saccoSavings = findViewById(R.id.saccoSavings);
+        cumulative = findViewById(R.id.saccoCumulativeDeposits);
 
         addMember = findViewById(R.id.addMember);
         depositNow = findViewById(R.id.deposit);
@@ -90,14 +113,124 @@ public class Contributions extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.transactionHisRecycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapterOnline = new ContributionsAdapterOnline(entitiesOnlineObjList, context);
 
-        getContributions();
+
+        if(getUserRole.equals("Member")){
+            addMember.setVisibility(View.GONE);
+            ctLayout.setVisibility(View.GONE);
+            ctStatus.setText(getString(R.string.contributionsoffline));
+            getContributionsOffline();
+        }
+        else {
+            addMember.setVisibility(View.VISIBLE);
+            ctLayout.setVisibility(View.VISIBLE);
+            ctStatus.setText(getString(R.string.contributionsonline));
+            getContributionsOnline();
+        }
+
+    }
+
+    private void getContributionsOnline() {
+        new GetContributionsOnline().execute();
+    }
+    private class GetContributionsOnline extends AsyncTask<Void, Void, Void>
+    {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            DatabaseReference databaseReference3 = FirebaseDatabase.getInstance().getReference().child(getSaccoName+"_Transactions");
+            databaseReference3.keepSynced(true);
+            final Query query1=databaseReference3.orderByChild("transType").equalTo("Deposit");
+            query1.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                    amount.add(Integer.valueOf(dataSnapshot.child("transAmount").getValue(String.class)));
+
+                    int sum = 0;
+                    for(int i = 0; i < amount.size(); i++)
+                        sum += amount.get(i);
+                    saccoSavings.setText("Ugx "+sum);
+                    cumulative.setText("Ugx "+sum);
+                }
+
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                }
+
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+
+            DatabaseReference databaseReference4 = FirebaseDatabase.getInstance().getReference().child(getSaccoName+"_Transactions");
+            databaseReference4.keepSynced(true);
+            final Query query2=databaseReference4.orderByChild("transType").equalTo("Deposit");
+            query2.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                    EntitiesOnlineObj onlineObj = new EntitiesOnlineObj(
+                            ""+dataSnapshot.child("userName").getValue(String.class),
+                            ""+dataSnapshot.child("transAmount").getValue(String.class),
+                            ""+dataSnapshot.child("transType").getValue(String.class),
+                            ""+dataSnapshot.child("transDate").getValue(String.class));
+                    entitiesOnlineObjList.add(onlineObj);
+                    adapterOnline.notifyDataSetChanged();
+                    recyclerView.setAdapter(adapterOnline);
+                }
+
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                }
+
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+        }
+
     }
 
     private void depositNow(View view) {
         makeDeposit(view);
     }
-    private void getContributions() {
+    private void getContributionsOffline() {
         class GetContributions extends AsyncTask<Void, Void, List<Entities>> {
 
             @Override
@@ -172,11 +305,12 @@ public class Contributions extends AppCompatActivity {
                                 .entitiesDao()
                                 .insert(entities);
 
-                        final DatabaseReference db = databaseReference.push();
-                        db.child("CreatedOn").setValue(formattedDate);
-                        db.child("userSacco").setValue(getSaccoName);
+                        final DatabaseReference db = databaseReference2.push();
+                        db.child("transDate").setValue(formattedDate);
+                        db.child("transSacco").setValue(getSaccoName);
+                        db.child("transAmount").setValue(mmy);
                         db.child("userName").setValue(getUserName);
-                        db.child("saccoImage").setValue(""+getImageUrl);
+                        db.child("transType").setValue("Deposit");
                         db.child("userPhone").setValue(getUserPhone);
                         db.child("userRole").setValue("Member");
 

@@ -42,15 +42,15 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.TasksVie
         if(entitiesList.get(position).getAmount().equals(entitiesList.get(0).getAmount())){
             holder.balance.setText(t.getAmount());
         }
-        else {
-            for(int i = 0; i < entitiesList.size(); i++){
-                int key = entitiesList.indexOf(i);
-                int cm = Integer.parseInt(entitiesList.get(position).getAmount());
-                int pm = Integer.parseInt(entitiesList.get(i).getAmount());
-                int balance = cm + pm;
-                holder.balance.setText(""+balance);
-            }
-        }
+//        else {
+//            for(int i = 0; i < entitiesList.size(); i++){
+//                int key = entitiesList.indexOf(i);
+//                int cm = Integer.parseInt(entitiesList.get(position).getAmount());
+//                int pm = Integer.parseInt(entitiesList.get(i).getAmount());
+//                int balance = cm + pm;
+//                holder.balance.setText(""+balance);
+//            }
+//        }
 
     }
 
