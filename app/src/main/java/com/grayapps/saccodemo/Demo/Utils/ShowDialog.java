@@ -3,8 +3,6 @@ package com.grayapps.saccodemo.Demo.Utils;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import com.grayapps.saccodemo.R;
 
@@ -18,7 +16,7 @@ public class ShowDialog {
         if(activity != null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
             LayoutInflater inflater = activity.getLayoutInflater();
-            builder.setView(inflater.inflate(R.layout.login_as_layout, null));
+            builder.setView(inflater.inflate(R.layout.add_member_dialog, null));
             builder.setCancelable(true);
 
             dialog = builder.create();

@@ -12,6 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".Demo.Main.Contributions"></activity>
+        <activity android:name=".Demo.Main.Savings" />
         <activity android:name=".Demo.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,9 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Demo.Home.Home" />
+        <activity android:name=".Demo.Main.Home" />
         <activity android:name=".Demo.Registration.Roles" />
-        <activity android:name=".Demo.Registration.Login"/>
+        <activity android:name=".Demo.Registration.Login" />
         <activity android:name=".Demo.Registration.VerifyPhone" />
         <activity android:name=".Demo.Registration.PhoneRegister" />
         <activity

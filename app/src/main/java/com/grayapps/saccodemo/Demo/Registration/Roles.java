@@ -4,13 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,7 +36,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.grayapps.saccodemo.Demo.Home.Home;
+import com.grayapps.saccodemo.Demo.Main.Home;
 import com.grayapps.saccodemo.R;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -64,11 +65,15 @@ public class Roles extends AppCompatActivity {
     private ProgressBar progressBar;
     private LinearLayout upload;
     private ImageView saccoImage;
+    private Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_roles);
         context = this;
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        whiteNotificationBar(toolbar);
         storageReference = FirebaseStorage.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Sacco_Accounts");
@@ -128,14 +133,14 @@ public class Roles extends AppCompatActivity {
                                         db.child("CreatedOn").setValue(currentDate);
                                         db.child("userSacco").setValue(getSaccoName);
                                         db.child("userName").setValue(getAdminName);
-                                        db.child("saccoImage").setValue(String.valueOf(imageUri));
+                                        db.child("saccoImage").setValue(""+uri);
                                         db.child("userPhone").setValue(userPhone);
                                         db.child("userRole").setValue(getRole);
 
                                         SharedPreferences.Editor editor = sharedPreferences.edit();
                                         editor.putString("userSacco", getSaccoName);
                                         editor.putString("userName", getAdminName);
-                                        editor.putString("saccoImage", String.valueOf(imageUri));
+                                        editor.putString("saccoImage", String.valueOf(uri));
                                         editor.putString("userPhone", userPhone);
                                         editor.putString("userRole", getRole);
                                         editor.putString("verified", "yes");
@@ -223,5 +228,13 @@ public class Roles extends AppCompatActivity {
         builder.setCancelable(false);
         alertDialog = builder.create();
         alertDialog.show();
+    }
+    private void whiteNotificationBar(View view) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int flags = view.getSystemUiVisibility();
+            flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+            view.setSystemUiVisibility(flags);
+            getWindow().setStatusBarColor(Color.WHITE);
+        }
     }
 }

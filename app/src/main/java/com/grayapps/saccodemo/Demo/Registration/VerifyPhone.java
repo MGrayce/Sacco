@@ -27,7 +27,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
-import com.grayapps.saccodemo.Demo.Home.Home;
+import com.grayapps.saccodemo.Demo.Main.Home;
 import com.grayapps.saccodemo.R;
 
 import java.util.concurrent.TimeUnit;

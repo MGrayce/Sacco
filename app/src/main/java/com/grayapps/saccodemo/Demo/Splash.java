@@ -7,10 +7,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.WindowManager;
 
-import com.grayapps.saccodemo.Demo.Home.Home;
+import com.grayapps.saccodemo.Demo.Main.Home;
 import com.grayapps.saccodemo.Demo.Registration.Login;
 import com.grayapps.saccodemo.R;
 
